@@ -59,9 +59,9 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     if ((self = [self init]))
     {
         [items enumerateObjectsUsingBlock:^(id title, NSUInteger idx, BOOL *stop)
-        {
-            [self insertSegmentWithTitle:title atIndex:idx animated:NO];
-        }];
+         {
+             [self insertSegmentWithTitle:title atIndex:idx animated:NO];
+         }];
     }
     return self;
 }
@@ -83,7 +83,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     CGRect frame = self.frame;
     frame.size.height = 43;
     self.frame = frame;
-
+    
     // Init properties
     _lastSelectedSegmentIndex = UISegmentedControlNoSegment;
     _selectedSegmentIndex = UISegmentedControlNoSegment;
@@ -91,15 +91,15 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     _interItemSpace = kSDSegmentedControlInterItemSpace;
     _stainEdgeInsets = kSDSegmentedControlStainEdgeInsets;
     __items = NSMutableArray.new;
-
+    
     // Appearance properties
     _animationDuration = kSDSegmentedControlDefaultDuration;
     _arrowSize = kSDSegmentedControlArrowSize;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
+    
     // Reset UIKit original widget
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
+    
     // Init layer
     self.layer.backgroundColor = UIColor.clearColor.CGColor;
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
@@ -112,9 +112,9 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     }
     else
     {
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor colorWithRed:0.961 green:0.961 blue:0.961 alpha:1];
     }
-
+    
     // Init border bottom layer
     [self.layer addSublayer:_borderBottomLayer = CAShapeLayer.layer];
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
@@ -128,7 +128,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         self.borderWidth = .25;
     }
     _borderBottomLayer.fillColor = nil;
-
+    
     // Init scrollView
     [self addSubview:_scrollView = UIScrollView.new];
     _scrollView.delegate = self;
@@ -136,7 +136,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     _scrollView.backgroundColor = UIColor.clearColor;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
-
+    
     // Init stain view
     [_scrollView addSubview:self._selectedStainView = SDStainView.new];
 }
@@ -258,11 +258,11 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     index = MAX(MIN(index, self.numberOfSegments - 1), 0);
     UIView *segmentView = self._items[index];
     [self._items removeObject:segmentView];
-
+    
     if (self.selectedSegmentIndex >= 0)
     {
         BOOL changed = NO;
-
+        
         if (self._items.count == 1)
         {
             // Deselect if there is no item
@@ -279,27 +279,27 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         {
             self.selectedSegmentIndex = [self firstEnabledSegmentIndexNearIndex:self.selectedSegmentIndex - 1];
         }
-
+        
         // It is important to set both, this will fix the animation.
         _lastSelectedSegmentIndex = self.selectedSegmentIndex;
-
+        
         if (changed)
         {
             [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
     }
-
+    
     if (animated)
     {
         [UIView animateWithDuration:.4 animations:^
-        {
-            segmentView.alpha = 0;
-            [self layoutSegments];
-        }
-        completion:^(BOOL finished)
-        {
-            [segmentView removeFromSuperview];
-        }];
+         {
+             segmentView.alpha = 0;
+             [self layoutSegments];
+         }
+                         completion:^(BOOL finished)
+         {
+             [segmentView removeFromSuperview];
+         }];
     }
     else
     {
@@ -324,7 +324,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)index
 {
     [self segmentAtIndex:index].enabled = enabled;
-
+    
     if (index == self.selectedSegmentIndex)
     {
         self.selectedSegmentIndex = [self firstEnabledSegmentIndexNearIndex:index];
@@ -379,7 +379,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     [segmentView setTitle:title forState:UIControlStateNormal];
     [segmentView setImage:image forState:UIControlStateNormal];
     [segmentView sizeToFit];
-
+    
     index = MAX(MIN(index, self.numberOfSegments), 0);
     if (index < self._items.count)
     {
@@ -393,13 +393,13 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         [self.scrollView addSubview:segmentView];
         [self._items addObject:segmentView];
     }
-
+    
     if (self.selectedSegmentIndex >= index && self.selectedSegmentIndex + 1 < self._items.count)
     {
         self.selectedSegmentIndex++;
     }
     _lastSelectedSegmentIndex = self.selectedSegmentIndex;
-
+    
     if (animated)
     {
         [UIView animateWithDuration:.4 animations:^
@@ -423,7 +423,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             return i;
         }
     }
-
+    
     for (int i = index; i >= 0; i--)
     {
         if (((SDSegmentView *)self._items[i]).enabled)
@@ -431,7 +431,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             return i;
         }
     }
-
+    
     return UISegmentedControlNoSegment;
 }
 
@@ -481,9 +481,9 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     {
         totalItemWidth += CGRectGetWidth(item.bounds);
     }
-
+    
     CGFloat totalWidth = (totalItemWidth + (self.interItemSpace * (self.numberOfSegments - 1)));
-
+    
     // Apply total to scrollView
     __block CGFloat currentItemPosition = 0;
     CGSize contentSize = self.scrollView.contentSize;
@@ -500,24 +500,24 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     }
     contentSize.height = self.bounds.size.height;
     self.scrollView.contentSize = contentSize;
-
+    
     // Center all items horizontally and each item vertically
     CGFloat spaceLeft = self.scrollView.contentSize.width - totalWidth;
     CGFloat itemHeight = self.scrollView.contentSize.height - self.arrowSize / 2 + .5;
-
+    
     currentItemPosition += spaceLeft / 2;
     [self._items enumerateObjectsUsingBlock:^(SDSegmentView *item, NSUInteger idx, BOOL *stop)
-    {
-        item.alpha = 1;
-        item.frame = CGRectIntegral(CGRectMake(currentItemPosition, 0, CGRectGetWidth(item.bounds), itemHeight));
-        currentItemPosition = CGRectGetMaxX(item.frame) + self.interItemSpace;
-    }];
-
+     {
+         item.alpha = 1;
+         item.frame = CGRectIntegral(CGRectMake(currentItemPosition, 0, CGRectGetWidth(item.bounds), itemHeight));
+         currentItemPosition = CGRectGetMaxX(item.frame) + self.interItemSpace;
+     }];
+    
     // Layout stain view and update items
     BOOL animated = self.animationDuration && !CGRectEqualToRect(self._selectedStainView.frame, CGRectZero);
     BOOL isScrollingSinceNow = NO;
     CGFloat selectedItemCenterPosition;
-
+    
     if (self.selectedSegmentIndex == UISegmentedControlNoSegment)
     {
         self._selectedStainView.hidden = YES;
@@ -531,18 +531,18 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     {
         SDSegmentView *selectedItem = self._items[self.selectedSegmentIndex];
         selectedItemCenterPosition = selectedItem.center.x;
-
+        
         CGRect stainFrame = UIEdgeInsetsInsetRect(selectedItem.innerFrame, self.stainEdgeInsets);
         self._selectedStainView.layer.cornerRadius = CGRectGetHeight(stainFrame) / 2;
         self._selectedStainView.hidden = NO;
         stainFrame.origin.x = roundf(selectedItemCenterPosition - CGRectGetWidth(stainFrame) / 2);
         selectedItemCenterPosition -= self.scrollView.contentOffset.x;
-
+        
         if (self.scrollView.contentSize.width > self.scrollView.bounds.size.width)
         {
             CGRect scrollRect = {self.scrollView.contentOffset, self.scrollView.bounds.size};
             CGRect targetRect = CGRectInset(stainFrame, -kSDSegmentedControlScrollOffset / 2, 0);
-
+            
             if (!CGRectContainsRect(scrollRect, targetRect))
             {
                 // Adjust position
@@ -555,10 +555,10 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
                 {
                     posOffset -= CGRectGetMaxX(targetRect) - CGRectGetMaxX(scrollRect);
                 }
-
+                
                 // Recenter arrow with posOffset
                 selectedItemCenterPosition += posOffset;
-
+                
                 // Temporary disable updates, if scrolling is needed, because scrollView will cause a
                 // lot of relayouts. The field isScrollBySelection will be reseted by scrollView's delegate
                 // call to scrollViewDidEndScrollingAnimation and can't be resetted after called, because
@@ -568,22 +568,22 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
                 [self.scrollView scrollRectToVisible:targetRect animated:animated];
             }
         }
-
+        
         UIView.animationsEnabled = animated;
         [UIView animateWithDuration:animated ? self.animationDuration : 0 animations:^
-        {
-            self._selectedStainView.frame = stainFrame;
-        }
-        completion:^(BOOL finished)
-        {
-            for (SDSegmentView *item in self._items)
-            {
-                item.selected = item == selectedItem;
-            }
-        }];
+         {
+             self._selectedStainView.frame = stainFrame;
+         }
+                         completion:^(BOOL finished)
+         {
+             for (SDSegmentView *item in self._items)
+             {
+                 item.selected = item == selectedItem;
+             }
+         }];
         UIView.animationsEnabled = YES;
     }
-
+    
     // Don't relayout paths while scrolling
     if (!_isScrollingBySelection || isScrollingSinceNow)
     {
@@ -594,7 +594,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             SDSegmentView *lastSegmentView = [self._items objectAtIndex:_lastSelectedSegmentIndex];
             oldPosition = lastSegmentView.center.x - self.scrollView.contentOffset.x;
         }
-
+        
         [self drawPathsFromPosition:oldPosition toPosition:selectedItemCenterPosition animationDuration:animated ? self.animationDuration : 0];
     }
 }
@@ -624,7 +624,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     CGFloat right = CGRectGetMaxX(bounds);
     CGFloat top = CGRectGetMinY(bounds);
     CGFloat bottom = CGRectGetMaxY(bounds);
-
+    
     //
     // Mask
     //
@@ -633,7 +633,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     [self addArrowAtPoint:CGPointMake(position, bottom) toPath:path withLineWidth:0.0];
     [path addLineToPoint:CGPointMake(right, top)];
     [path addLineToPoint:CGPointMake(left, top)];
-
+    
     //
     // Shadow mask
     //
@@ -643,7 +643,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     [self addArrowAtPoint:CGPointMake(position, bottom) toPath:shadowPath withLineWidth:0.0];
     [shadowPath addLineToPoint:CGPointMake(right, top)];
     [shadowPath addLineToPoint:CGPointMake(left, top)];
-
+    
     //
     // Bottom white line
     //
@@ -651,8 +651,8 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     __block UIBezierPath *borderBottomPath = UIBezierPath.new;
     const CGFloat lineY = bottom - _borderBottomLayer.lineWidth;
     [self addArrowAtPoint:CGPointMake(position, lineY) toPath:borderBottomPath withLineWidth:_borderBottomLayer.lineWidth];
-
-
+    
+    
     // Skip current animations and ensure the completion block was applied
     // otherwise this will end up in ugly effects if the selection was changed very fast
     [self.layer removeAllAnimations];
@@ -661,18 +661,18 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     {
         lastCompletionBlock();
     }
-
+    
     // Build block
     void(^assignLayerPaths)() = ^
     {
         ((CAShapeLayer *)self.layer).path = path.CGPath;
         self.layer.shadowPath = shadowPath.CGPath;
         _borderBottomLayer.path = borderBottomPath.CGPath;
-
+        
         // Dereference itself to be not executed twice
         lastCompletionBlock = nil;
     };
-
+    
     __block void(^animationCompletion)();
     if (completion)
     {
@@ -686,13 +686,13 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     {
         animationCompletion = assignLayerPaths;
     }
-
+    
     // Apply new paths
     if (duration > 0)
     {
         // That's a bit fragile: we detect stop animation call by duration!
         NSString *timingFuncName = duration < self.animationDuration ? kCAMediaTimingFunctionEaseIn : kCAMediaTimingFunctionEaseInEaseOut;
-
+        
         // Check if we have to do a stop animation, which means that we first
         // animate to have a fully visible arrow and then move the arrow.
         // Otherwise there will be ugly effects.
@@ -708,7 +708,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             {
                 stopPosition = right-self.arrowSize;
             }
-
+            
             if (stopPosition > 0)
             {
                 float relStopDuration = ABS((stopPosition - oldPosition) / (position - oldPosition));
@@ -721,7 +721,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
                 timingFuncName  = kCAMediaTimingFunctionEaseOut;
             }
         }
-
+        
         void (^animation)() = ^
         {
             [CATransaction begin];
@@ -729,14 +729,14 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             CAMediaTimingFunction *timing = [CAMediaTimingFunction functionWithName:timingFuncName];
             [CATransaction setAnimationTimingFunction:timing];
             [CATransaction setCompletionBlock:animationCompletion];
-
+            
             [self addAnimationWithDuration:duration onLayer:self.layer forKey:@"path" toPath:path];
             [self addAnimationWithDuration:duration onLayer:self.layer forKey:@"shadow" toPath:shadowPath];
             [self addAnimationWithDuration:duration onLayer:_borderBottomLayer forKey:@"path" toPath:borderBottomPath];
-
+            
             [CATransaction commit];
         };
-
+        
         if (stopPosition > 0)
         {
             [self drawPathsToPosition:stopPosition animationDuration:stopDuration completion:animation];
@@ -745,7 +745,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         {
             animation();
         }
-
+        
         // Remember completion block
         lastCompletionBlock = assignLayerPaths;
     }
@@ -753,14 +753,14 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     {
         assignLayerPaths();
     }
-
+    
 }
 
 - (void)addAnimationWithDuration:(CFTimeInterval)duration onLayer:(CALayer *)layer forKey:(NSString *)key toPath:(UIBezierPath *)path
 {
     NSString *camelCaseKeyPath;
     NSString *keyPath;
-
+    
     if ([key isEqual:@"path"])
     {
         camelCaseKeyPath = key;
@@ -771,7 +771,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         camelCaseKeyPath = [NSString stringWithFormat:@"%@Path", key];
         keyPath = [NSString stringWithFormat:@"%@.path", key];
     }
-
+    
     CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:camelCaseKeyPath];
     pathAnimation.removedOnCompletion = NO;
     pathAnimation.fillMode = kCAFillModeForwards;
@@ -807,25 +807,25 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     //  12   \             \
     //     P  4-----5    P  4------5
     //
-
+    
     const CGFloat left = CGRectGetMinX(self.bounds);
     const CGFloat right = CGRectGetMaxX(self.bounds);
     const CGFloat center = (right-left) / 2;
     const CGFloat width = self.arrowSize - lineWidth;
     const CGFloat height = self.arrowSize + lineWidth/2;
     const CGFloat ratio = self.arrowHeightFactor;
-
+    
     __block NSMutableArray *points = NSMutableArray.new;
     BOOL hasCustomLastPoint = NO;
-
+    
     void (^addPoint)(CGFloat x, CGFloat y) = ^(CGFloat x, CGFloat y)
     {
         [points addObject:[NSValue valueWithCGPoint:CGPointMake(x, y)]];
     };
-
+    
     // Add first point
     addPoint(left, point.y);
-
+    
     if (_arrowSize <= 0.02)
     {
         addPoint(point.x - lineWidth, point.y);
@@ -910,7 +910,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
             addPoint(right - 0.01, point.y);
         }
     }
-
+    
     // Add points from array to path
     CGPoint node = ((NSValue *)[points objectAtIndex:0]).CGPointValue;
     if (path.isEmpty)
@@ -926,7 +926,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         node = ((NSValue *)[points objectAtIndex:i]).CGPointValue;
         [path addLineToPoint:node];
     }
-
+    
     // Add last point of not replaced
     if (!hasCustomLastPoint)
     {
@@ -968,12 +968,12 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 + (void)initialize
 {
     [super initialize];
-
+    
     SDSegmentView *appearance = [self appearance];
     [appearance setTitleColor:[UIColor colorWithWhite:0.392 alpha:1] forState:UIControlStateNormal];
     [appearance setTitleColor:[UIColor colorWithWhite:0.235 alpha:1] forState:UIControlStateSelected];
     [appearance setTitleColor:[UIColor colorWithWhite:0.800 alpha:1] forState:UIControlStateDisabled];
-
+    
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
     {
         [appearance setTitleShadowColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -997,7 +997,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     if ((self = [super initWithFrame:frame]))
     {
         _imageSize = kSDSegmentedControlImageSize;
-
+        
         if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
         {
             self.titleShadowOffset = CGSizeMake(0, 0.5);
@@ -1005,17 +1005,17 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         }
         else
         {
-            self.titleFont = [UIFont systemFontOfSize:14];
+            self.titleFont = [UIFont boldSystemFontOfSize:14];
             self.selectedTitleFont = [UIFont boldSystemFontOfSize:14];
         }
-
+        
         self.userInteractionEnabled = YES;
         self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         self.titleEdgeInsets = UIEdgeInsetsMake(0, 0.0, 0, -8.0); // Space between text and image
         self.imageEdgeInsets = UIEdgeInsetsMake(0, 0.0, 0, 0.0); // Space between image and stain
         self.contentEdgeInsets = UIEdgeInsetsMake(0, 0.0, 0, 8.0); // Enlarge touchable area
-
+        
 #ifdef SDSegmentedControlDebug
         self.backgroundColor = [UIColor colorWithHue:1.00 saturation:1.0 brightness:1.0 alpha:0.5];
         self.imageView.backgroundColor = [UIColor colorWithHue:0.66 saturation:1.0 brightness:1.0 alpha:0.5];
@@ -1075,34 +1075,34 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (UIImage *)scaledImageWithImage:(UIImage*)image
 {
     if (!image) return nil;
-
-    // Scale down images that are too large 
+    
+    // Scale down images that are too large
     if (image.size.width > self.imageSize.width || image.size.height > self.imageSize.height)
     {
         UIImageView *imageView = [UIImageView.alloc initWithFrame:CGRectMake(0, 0, self.imageSize.width, self.imageSize.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
-
+        
         UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, NO, 0.0);
         [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
-
+    
 	return image;
-
+    
 }
 
 - (CGRect)innerFrame
 {
     const CGPoint origin = self.frame.origin;
     CGRect innerFrame = CGRectOffset(self.titleLabel.frame, origin.x, origin.y);
-
+    
     if (innerFrame.size.width > 0)
     {
         innerFrame.size.width = self.titleEdgeInsets.left + self.titleLabel.frame.size.width + self.titleEdgeInsets.right;
     }
-
+    
     if ([self imageForState:self.state])
     {
         const CGRect imageViewFrame = self.imageView.frame;
@@ -1117,7 +1117,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
         innerFrame.size.height = imageViewFrame.size.height;
         innerFrame.size.width += self.imageEdgeInsets.left + imageViewFrame.size.width + self.imageEdgeInsets.right;
     }
-
+    
     return innerFrame;
 }
 
@@ -1131,20 +1131,16 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     [super initialize];
     SDStainView *appearance = [self appearance];
     appearance.edgeInsets = UIEdgeInsetsMake(-.5, -.5, -.5, -.5);
-
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1)
-    {
-        appearance.innerStrokeLineWidth = 1.5;
-        appearance.innerStrokeColor = UIColor.whiteColor;
-        appearance.backgroundColor = [UIColor colorWithWhite:0.816 alpha:1];
-        appearance.shadowOffset = CGSizeMake(0, .5);
-        appearance.shadowBlur = 2.5;
-        appearance.shadowColor = UIColor.blackColor;
-    }
-    else
-    {
-        appearance.backgroundColor = [UIColor clearColor];
-    }
+    
+    
+    appearance.innerStrokeLineWidth = 1.5;
+    appearance.innerStrokeColor = UIColor.whiteColor;
+    appearance.backgroundColor = [UIColor colorWithWhite:0.816 alpha:1];
+    appearance.shadowOffset = CGSizeMake(0, .5);
+    appearance.shadowBlur = 2.5;
+    appearance.shadowColor = UIColor.blackColor;
+    
+    
 }
 
 + (id)appearance
@@ -1207,19 +1203,19 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-
+    
     [self.backgroundColor setFill];
     CGContextFillRect(context, self.bounds);
-
+    
     CGPathRef roundedRect = [UIBezierPath bezierPathWithRoundedRect:UIEdgeInsetsInsetRect(rect, self.edgeInsets) cornerRadius:self.layer.cornerRadius].CGPath;
     CGContextAddPath(context, roundedRect);
     CGContextClip(context);
-
+    
     CGContextAddPath(context, roundedRect);
     CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), self.shadowOffset, self.shadowBlur, self.shadowColor.CGColor);
     CGContextSetStrokeColorWithColor(context, self.backgroundColor.CGColor);
     CGContextStrokePath(context);
-
+    
     CGContextTranslateCTM(context, 0, -1);
     CGContextAddPath(context, roundedRect);
     CGContextSetLineWidth(context, self.innerStrokeLineWidth);

@@ -21,6 +21,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        self.segmentedControl.alpha = 0.90;
+        
+    }
     addCount = 0;
     [self updateSelectedSegmentLabel];
 }
